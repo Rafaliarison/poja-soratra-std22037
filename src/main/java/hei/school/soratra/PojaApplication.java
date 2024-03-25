@@ -35,6 +35,29 @@ public class PojaApplication {
                 .body("Error saving phrase: " + e.getMessage());
       }
     }
+
+    @GetMapping("/soratra/{id}")
+    public ResponseEntity<?> getSoratra(@PathVariable Long id) {
+      Soratra soratra = soratraRepository.findById(id).orElse(null);
+      if (soratra == null) {
+        return ResponseEntity.notFound().build();
+      }
+
+      String originalUrl = getPresignedUrl(soratra.getOriginalFilename());
+      String transformedUrl = getPresignedUrl(soratra.getTransformedFilename());
+
+      Map<String, String> responseBody = new HashMap<>();
+      responseBody.put("original_url", originalUrl);
+      responseBody.put("transformed_url", transformedUrl);
+
+      return ResponseEntity.ok().body(responseBody);
+    }
+
+    private String getPresignedUrl(String filename) {
+
+      return "";
+    }
+
   }
 
   public class Soratra {
